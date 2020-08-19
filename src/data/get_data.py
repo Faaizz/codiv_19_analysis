@@ -29,7 +29,7 @@ def get_johns_hopkings():
 
     # GIT PULL
     cmd= "git pull"
-    cmd_wd= "../../data/raw/JH_dataset/COVID-19"
+    cmd_wd= "data/raw/JH_dataset/COVID-19"
     # Pull from Git repo
     git_proc= subprocess.Popen(
         cmd,
@@ -107,7 +107,7 @@ def get_current_nigeria():
 
     # UPDATE DATASET
     pd_table.to_csv(
-        "../../data/processed/NCDC.csv", sep=";", 
+        "data/processed/NCDC.csv", sep=";", 
     )
     print("Updated data for all {0} states in Nigeria.".format(pd_table.shape[0]))
 

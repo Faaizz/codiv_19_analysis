@@ -23,7 +23,7 @@ def store_relational_model():
     -------
     """
     # Read data into dataframe
-    data_path= "../../data/raw/JH_dataset/COVID-19/" + \
+    data_path= "data/raw/JH_dataset/COVID-19/" + \
         "csse_covid_19_data/csse_covid_19_time_series/" + \
         "time_series_covid19_confirmed_global.csv"
     pd_raw= pd.read_csv(data_path)
@@ -33,6 +33,9 @@ def store_relational_model():
 
     # Discard Lat and Long columns
     rel_fr= rel_fr.drop(["Lat", "Long"], axis=1)
+    
+    # Set NaN to 'no'. Important for indexing
+    rel_fr= rel_fr.fillna('no')
 
     # Rename columns for convienence
     rel_fr= rel_fr.rename(
@@ -52,7 +55,7 @@ def store_relational_model():
 
     # UPDATE DATASET
     rel_fr.to_csv(
-        "../../data/processed/COVID_relational_full.csv", sep=";"
+        "data/processed/COVID_relational_full.csv", sep=";",index=False
     )
     print("Number of rows stored: {0}.".format(rel_fr.shape[0]))
 
