@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 
 import dash
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as dhtml
 from dash.dependencies import Input, Output
 
@@ -11,55 +12,74 @@ import os
 
 print("Working Directory: {0}".format(os.getcwd()))
 
-df_JH_data= pd.read_csv('data/processed/COVID_final_set.csv', sep=';')
+df_JH_data= pd.read_csv('../data/processed/COVID_final_set.csv', sep=';')
 
 # Create figure
 fig= go.Figure()
 
 # Create Dash App
-app= dash.Dash()
+app= dash.Dash(external_stylesheets=[dbc.themes.LUX])
 
-# Create App layout
-app.layout= dhtml.Div([
-    dcc.Markdown("""
-    # COVID-19 Data Analysis
-
-    Goal of this project is to learn data science methods by applying cross industry 
-    standard process for data management (CRISP-DM).
-
-    """),
-
-    dcc.Markdown("""
-    ## Multi-Select Country for visualization
-    """),
-
+# Country List Select
+ctry_input= dbc.FormGroup([
+    dhtml.H5("Select Countries"),
     dcc.Dropdown(
-        id='country_dropdown',
+        id="country_dropdown",
         options=[ {'label': each, 'value': each} for each in df_JH_data['country'].unique() ],
-        # Default selections
-        value= ['Nigeria', 'Germany', 'Italy'],
+        value=['Nigeria', 'Germany', 'Italy'],
         multi=True
-    ),
-
-    dcc.Markdown("""
-    ## Select visualization timeline
-    """),
-
-    dcc.Dropdown(
-        id= 'visual_time',
-        options=[
-            {'label': 'Timeline Confirmed', 'value': 'confirmed'},
-            {'label': 'Timeline Confirmed Filtered', 'value': 'confirmed_filtered'},
-            {'label': 'Timeline Doubling Rate', 'value': 'confirmed_DR'},
-            {'label': 'Timeline Doubling Rate Filtered', 'value': 'confirmed_filtered_DR'}
-        ],
-        value='confirmed',
-        multi=False
-    ),
-
-    dcc.Graph(figure=fig, id='main_figure')
+    )    
 ])
 
+# Visualization Select
+vis_input= dbc.FormGroup([
+    dhtml.H5("Select Timeline"),
+    dcc.Dropdown(
+        id="visual_time",
+        options=[
+            {'label': 'Confirmed Cases', 'value': 'confirmed'},
+            {'label': 'Confirmed Cases Filtered', 'value': 'confirmed_filtered'},
+            {'label': 'Doubling Rate of Confirmed Cases', 'value': 'confirmed_DR'},
+            {'label': 'Doubling Rate of Confirmed Cases Filtered', 'value': 'confirmed_filtered_DR'}
+        ],
+        value='confirmed',
+        multi=False,
+        clearable=False
+    )    
+])
+
+#Create layout
+app.layout= dbc.Container(
+    fluid=True,
+    children=[
+        # Header
+        dhtml.Br(),dhtml.Br(),
+        dhtml.H1("COVID-19 Dashboard Prototype", className="text-center"),
+        dhtml.P(children=[
+            "A COVID-19 Dashboard Prototype developed using the Cross Industry \
+            Standard Process for Data Mining. The data is sourced from ",
+            dhtml.A("Johns Hopkings University", href="https://github.com/CSSEGISandData/COVID-19"),
+            ", a Savitsky-Golay Filter is used for filtereing (in the filtered versions of the timelines), \
+            and the Doubling Times (the estimated number of days it will take for the current number of \
+            confirmed cases to get doubled) are calculated using Linear Regression over a window of 3 days."
+        ]),
+        dhtml.Br(),dhtml.Br(),
+        
+        # Body
+        dbc.Row([
+            dbc.Col(md=6, lg=4, children=[ctry_input]),
+            dbc.Col(md=6, lg=4, children=[vis_input]),
+            dhtml.Br(),dhtml.Br(),
+            # Plot
+            dbc.Col(sm=12, children=[
+                dbc.Col(dhtml.H4("Plots", className="text-center"), sm=12),
+                dcc.Graph(figure=fig, id="main_figure")
+            ]
+            )
+        ], className="align-items-center"
+        )        
+    ],
+)
 
 # Add callback for Dropdown
 
@@ -83,8 +103,8 @@ def update_fig(selected_countries, visual_name):
     
     else: 
         my_yaxis={
-            'type': 'log',
-            'title': 'Confirmed cases (source: Johns Hopkings, log-scale)'
+            'type': 'linear',
+            'title': 'Confirmed cases (source: Johns Hopkings, linear-scale)'
         }
 
     #Traces
@@ -123,8 +143,6 @@ def update_fig(selected_countries, visual_name):
 
     # Layout
     fig_design= dict(
-        width=1280,
-        height=720,
         xaxis_title="Timeline",
         xaxis={
             "tickangle": -75,
