@@ -2,7 +2,24 @@ import numpy as np
 import pandas as pd
 from sklearn import linear_model
 from scipy import signal
+import argparse
 
+#==============================================================================
+# COMMAND LINE ARGUMENTS
+# Create parser object
+cl_parser= argparse.ArgumentParser(
+    description="Filter data and compute doubling time."
+)
+
+# ARGUMENTS
+# Path to data folder
+cl_parser.add_argument(
+    "--data_path", action="store", default="data/",
+    help="Path to data folder"
+)
+
+# Collect command-line arguments
+cl_options= cl_parser.parse_args()
 # Create Linear Regression Model
 reg= linear_model.LinearRegression(fit_intercept= True)  
 
@@ -156,7 +173,7 @@ if __name__ == "__main__":
     assert(int(result[0]) == 2)
 
     pd_JH_rel= pd.read_csv(
-            'data/processed/COVID_relational_full.csv', 
+            cl_options.data_path + 'processed/COVID_relational_full.csv', 
             sep=';', parse_dates=[0]
         )
     pd_JH_rel= pd_JH_rel.sort_values('date', ascending=True).reset_index(drop=True)
@@ -171,5 +188,5 @@ if __name__ == "__main__":
     pd_res['confirmed_filtered_DR']= pd_res['confirmed_filtered_DR'].where(DR_mask, other=np.NaN)
 
     # Save
-    pd_res.to_csv('data/processed/COVID_final_set.csv', sep=';', index=False)
+    pd_res.to_csv(cl_options.data_path + 'processed/COVID_final_set.csv', sep=';', index=False)
 

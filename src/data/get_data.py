@@ -12,42 +12,64 @@ import requests
 # For parsing and sifting through HTML
 from bs4 import BeautifulSoup
 
+import argparse
 
 # Load environmental variables specified in .env
 load_dotenv()
 
+#==============================================================================
+# COMMAND LINE ARGUMENTS
+# Create parser object
+cl_parser= argparse.ArgumentParser(
+    description="Pull COVID-19 worldwide data from Johns Hopkings University \
+        GITHUB and Nigeria-specific data from NCDC website."
+)
 
-def get_johns_hopkings():
+# ARGUMENTS
+# Path to data folder
+cl_parser.add_argument(
+    "--data_path", action="store", default="data/",
+    help="Path to data folder"
+)
+
+# Collect command-line arguments
+cl_options= cl_parser.parse_args()
+
+
+#==============================================================================
+def get_johns_hopkings(data_path):
     """ Update data from Johns Hopkings (GITHUB)
     
     Parameters:
     ----------
+    data_path: URI-like
+        Path to data folder
 
     Returns:
     -------
     """
 
     # GIT CLONE
-    if(not os.path.exists("data/raw")):
-        os.mkdir("data/raw")
+    if(not os.path.exists(data_path + "raw")):
+        os.mkdir(data_path + "raw")
 
-    if(not os.path.exists("data/processed")):
-        os.mkdir("data/processed")
+    if(not os.path.exists(data_path + "processed")):
+        os.mkdir(data_path + "processed")
 
-    if(not os.path.exists("data/raw/JH_dataset")):
+    if(not os.path.exists(data_path + "raw/JH_dataset")):
         # Create directory
-        os.mkdir("data/raw/JH_dataset")
+        os.mkdir(data_path + "raw/JH_dataset")
 
     # Check if Dataset doesn't already exist in filesystem
-    if(not os.path.exists("data/raw/JH_dataset/COVID-19")):
+    if(not os.path.exists(data_path + "raw/JH_dataset/COVID-19")):
         # Command to clone dataset
         cmd=  "git clone https://github.com/CSSEGISandData/COVID-19.git"
-        cmd_wd= "data/raw/JH_dataset"
+        cmd_wd= data_path + "raw/JH_dataset"
 
     # Otherwise if Dataset repo has already been cloned, peform pull operation
     else:
         cmd= "git pull"
-        cmd_wd= "data/raw/JH_dataset/COVID-19"
+        cmd_wd= data_path + "raw/JH_dataset/COVID-19"
 
     # Pull from Git repo
     git_proc= subprocess.Popen(
@@ -67,13 +89,16 @@ def get_johns_hopkings():
 
 
 
-def get_current_nigeria():
+#==============================================================================
+def get_current_nigeria(data_path):
     """ Update data from Nigeria Centre for Disease Control (NCDC)
 
     Update data from NCDC via webscraping
     
     Parameters:
     ----------
+    data_path: URI-like
+        Path to data folder
 
     Returns:
     -------
@@ -126,11 +151,12 @@ def get_current_nigeria():
 
     # UPDATE DATASET
     pd_table.to_csv(
-        "data/processed/NCDC.csv", sep=";", 
+        data_path + "processed/NCDC.csv", sep=";", 
     )
     print("Updated data for all {0} states in Nigeria.".format(pd_table.shape[0]))
 
 
+#==============================================================================
 if __name__ == "__main__":
-    get_johns_hopkings()
-    get_current_nigeria()
+    get_johns_hopkings(cl_options.data_path)
+    get_current_nigeria(cl_options.data_path)

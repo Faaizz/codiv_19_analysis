@@ -12,21 +12,44 @@ import requests
 # For parsing and sifting through HTML
 from bs4 import BeautifulSoup
 
+import argparse
 
-def store_relational_model():
+#==============================================================================
+# COMMAND LINE ARGUMENTS
+# Create parser object
+cl_parser= argparse.ArgumentParser(
+    description="Process COVID-19 worldwide data from Johns Hopkings University \
+        GITHUB."
+)
+
+# ARGUMENTS
+# Path to data folder
+cl_parser.add_argument(
+    "--data_path", action="store", default="data/",
+    help="Path to data folder"
+)
+
+# Collect command-line arguments
+cl_options= cl_parser.parse_args()
+
+
+#==============================================================================
+def store_relational_model(data_path):
     """ Process Johns Hopkings data into a Relational dataset
     
     Parameters:
     ----------
+    data_path: URI-like
+        Path to data folder
 
     Returns:
     -------
     """
     # Read data into dataframe
-    data_path= "data/raw/JH_dataset/COVID-19/" + \
+    raw_data_path= data_path + "raw/JH_dataset/COVID-19/" + \
         "csse_covid_19_data/csse_covid_19_time_series/" + \
         "time_series_covid19_confirmed_global.csv"
-    pd_raw= pd.read_csv(data_path)
+    pd_raw= pd.read_csv(raw_data_path)
 
     # Create DataFrame
     rel_fr= pd.DataFrame(pd_raw)
@@ -55,10 +78,11 @@ def store_relational_model():
 
     # UPDATE DATASET
     rel_fr.to_csv(
-        "data/processed/COVID_relational_full.csv", sep=";",index=False
+        data_path + "processed/COVID_relational_full.csv", sep=";",index=False
     )
     print("Number of rows stored: {0}.".format(rel_fr.shape[0]))
 
 
+#==============================================================================
 if __name__ == "__main__":
-    store_relational_model()
+    store_relational_model(cl_options.data_path)
