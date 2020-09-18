@@ -171,7 +171,5 @@ if __name__ == "__main__":
     pd_res['confirmed_filtered_DR']= pd_res['confirmed_filtered_DR'].where(DR_mask, other=np.NaN)
 
     # Save
-    pd_res.to_csv('../data/processed/COVID_final_set.csv', sep=';', index=False)
-
-    print(pd_res.tail())
+    pd_res.to_csv('data/processed/COVID_final_set.csv', sep=';', index=False)
 

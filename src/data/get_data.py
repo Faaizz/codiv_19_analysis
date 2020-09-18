@@ -27,9 +27,28 @@ def get_johns_hopkings():
     -------
     """
 
-    # GIT PULL
-    cmd= "git pull"
-    cmd_wd= "data/raw/JH_dataset/COVID-19"
+    # GIT CLONE
+    if(not os.path.exists("data/raw")):
+        os.mkdir("data/raw")
+
+    if(not os.path.exists("data/processed")):
+        os.mkdir("data/processed")
+
+    if(not os.path.exists("data/raw/JH_dataset")):
+        # Create directory
+        os.mkdir("data/raw/JH_dataset")
+
+    # Check if Dataset doesn't already exist in filesystem
+    if(not os.path.exists("data/raw/JH_dataset/COVID-19")):
+        # Command to clone dataset
+        cmd=  "git clone https://github.com/CSSEGISandData/COVID-19.git"
+        cmd_wd= "data/raw/JH_dataset"
+
+    # Otherwise if Dataset repo has already been cloned, peform pull operation
+    else:
+        cmd= "git pull"
+        cmd_wd= "data/raw/JH_dataset/COVID-19"
+
     # Pull from Git repo
     git_proc= subprocess.Popen(
         cmd,

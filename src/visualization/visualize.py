@@ -12,7 +12,7 @@ import os
 
 print("Working Directory: {0}".format(os.getcwd()))
 
-df_JH_data= pd.read_csv('../data/processed/COVID_final_set.csv', sep=';')
+df_JH_data= pd.read_csv('data/processed/COVID_final_set.csv', sep=';')
 
 # Create figure
 fig= go.Figure()
