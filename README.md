@@ -1,12 +1,61 @@
-COVID-19 DASHBOARD PROTOTYPE
-==============================
+# COVID-19 DASHBOARD PROTOTYPE
 
 A COVID-19 Dashboard Prototype developed using the Cross Industry Standard Process for Data Mining. 
 The data is sourced from Johns Hopkings University, a Savitsky-Golay Filter is used for filtering (in the filtered versions of the timelines), 
 and the Doubling Times (the estimated number of days it will take for the current number of confirmed cases to get doubled) are calculated using 
 Linear Regression over a window of 3 days.
 
-Project Organization
+-------------------------------------------------------------------------------
+## Basic Usage
+
+```shell
+# Install dependencies
+pip3 -r ./requirements.txt
+
+# Fetch/update dataset
+python3 ./src/data/get_data.py
+
+# Process and clean up data
+python3 ./src/data/process_JH_data.py
+
+# Build-up visualization features
+python3 ./src/features/build_features.py
+
+# Start Dash flask server on port 8080
+python3 ./src/visualization/visualize.py
+
+```
+
+## Docker
+The application is split into 2 services: data-fetching and visualization.  
+
+#### Data-fetching Service
+Updates and processes the data for visualization once whilst the 
+image is being built and at 00:00 daily.  
+*Note: Due to data fetching and processing during the build step, it might take a few minutes.*  
+
+```shell
+# Build image
+docker build -f ./Docker/fetch_service/Dockerfile -t covid_fetch_service .
+
+# Start container
+docker run -d --restart unless-stopped -v covid-data:/app/data covid_fetch_service
+```
+
+#### Visualization Service
+Runs the dashboard application on port 8080.  
+
+```shell
+# Build image
+docker build -f ./Docker/visualize_service/Dockerfile -t covid_visualize_service .
+
+# Start container
+docker run -ti --restart unless-stopped -v covid-data:/app/data -p 127.0.0.1:1234:8080 covid_visualize_service
+```
+The dashboard application can then be accessed on *127.0.0.1:1234* on the host machine.  
+
+
+## Project Organization
 ------------
 
     ├── LICENSE

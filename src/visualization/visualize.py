@@ -176,4 +176,4 @@ def update_fig(selected_countries, visual_name):
 
 if __name__ == "__main__":
 
-    app.run_server(host="0.0.0.0", use_reloader=False)
+    app.run_server(host="0.0.0.0", port="8080", use_reloader=False)
