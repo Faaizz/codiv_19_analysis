@@ -1,7 +1,10 @@
-ADS_COVID-19
+COVID-19 DASHBOARD PROTOTYPE
 ==============================
 
-Applied Data Science on COVID-19 data
+A COVID-19 Dashboard Prototype developed using the Cross Industry Standard Process for Data Mining. 
+The data is sourced from Johns Hopkings University, a Savitsky-Golay Filter is used for filtering (in the filtered versions of the timelines), 
+and the Doubling Times (the estimated number of days it will take for the current number of confirmed cases to get doubled) are calculated using 
+Linear Regression over a window of 3 days.
 
 Project Organization
 ------------

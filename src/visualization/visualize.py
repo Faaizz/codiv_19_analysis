@@ -8,11 +8,26 @@ import dash_bootstrap_components as dbc
 import dash_html_components as dhtml
 from dash.dependencies import Input, Output
 
-import os
+import os, argparse
 
-print("Working Directory: {0}".format(os.getcwd()))
+#==============================================================================
+# COMMAND LINE ARGUMENTS
+# Create parser object
+cl_parser= argparse.ArgumentParser(
+    description="Filter data and compute doubling time."
+)
 
-df_JH_data= pd.read_csv('data/processed/COVID_final_set.csv', sep=';')
+# ARGUMENTS
+# Path to data folder
+cl_parser.add_argument(
+    "--data_path", action="store", default="data/",
+    help="Path to data folder"
+)
+
+# Collect command-line arguments
+cl_options= cl_parser.parse_args()
+
+df_JH_data= pd.read_csv(cl_options.data_path + 'processed/COVID_final_set.csv', sep=';')
 
 # Create figure
 fig= go.Figure()
@@ -161,4 +176,4 @@ def update_fig(selected_countries, visual_name):
 
 if __name__ == "__main__":
 
-    app.run_server(debug=True, use_reloader=False)
+    app.run_server(host="0.0.0.0", use_reloader=False)
