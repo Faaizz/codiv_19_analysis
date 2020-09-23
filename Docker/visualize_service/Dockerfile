@@ -1,5 +1,5 @@
-# BUILD-USING docker build -f ./Dockerfile ../../ -t covid_visualize_serive
-# RUN-USING: docker run -d -v --rm volume-name:/app/data
+# BUILD-USING docker build -f ./Docker/visualize_service/Dockerfile -t covid_visualize_service
+# RUN-USING: docker run -d --restart unless-stopped -p 127.0.0.1:3456:8080 -v volume-name:/app/data covid_visualize_service
 
 FROM python:3.8.5-slim-buster
 

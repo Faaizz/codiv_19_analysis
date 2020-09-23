@@ -29,6 +29,8 @@ python3 ./src/visualization/visualize.py
 ## Docker
 The application is split into 2 services: data-fetching and visualization.  
 
+### x86/64 Architecture
+
 #### Data-fetching Service
 Updates and processes the data for visualization once whilst the 
 image is being built and at 00:00 daily.  
@@ -48,6 +50,39 @@ Runs the dashboard application on port 8080.
 ```shell
 # Build image
 docker build -f ./Docker/visualize_service/Dockerfile -t covid_visualize_service .
+
+# Start container
+docker run -ti --restart unless-stopped -v covid-data:/app/data -p 127.0.0.1:1234:8080 covid_visualize_service
+```
+The dashboard application can then be accessed on *127.0.0.1:1234* on the host machine.  
+
+### arm7l Architecture
+The build process is very slow on arm7l architecture because **numpy** and **scipy** have 
+to be built from source. 
+Also, depending on the hardware, available resources might be limited.  
+
+Tested on Raspberry Pi 4.  
+
+
+#### Data-fetching Service
+Updates and processes the data for visualization once whilst the 
+image is being built and at 00:00 daily.  
+*Note: Due to data fetching and processing during the build step, it might take a few minutes.*  
+
+```shell
+# Build image
+docker build -f ./Docker/fetch_service/Dockerfile_arm7l -t covid_fetch_service .
+
+# Start container
+docker run -d --restart unless-stopped -v covid-data:/app/data covid_fetch_service
+```
+
+#### Visualization Service
+Runs the dashboard application on port 8080.  
+
+```shell
+# Build image
+docker build -f ./Docker/visualize_service/Dockerfile_arm7l -t covid_visualize_service .
 
 # Start container
 docker run -ti --restart unless-stopped -v covid-data:/app/data -p 127.0.0.1:1234:8080 covid_visualize_service

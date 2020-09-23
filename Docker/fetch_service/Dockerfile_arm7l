@@ -1,5 +1,5 @@
 # BUILD-USING docker build -f ./Docker/fetch_service/Dockerfile_arm7l -t covid_fetch_service
-# RUN-USING: docker run -d --rm -v volume-name:/app/data
+# RUN-USING: docker run -d --rm -v volume-name:/app/data covid_fetch_service
 
 # DEVELOPMENT
 # FROM python:3.8.5-buster
@@ -32,6 +32,9 @@ WORKDIR /app/scipy-master
 RUN apt-get install -y g++
 RUN python3 setup.py build
 RUN python3 setup.py install --user
+
+# Revert workdir to root
+WORKDIR /
 
 # Install Python dependencies
 RUN pip3 install --upgrade pip

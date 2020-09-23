@@ -1,0 +1,39 @@
+# BUILD-USING docker build -f ./Docker/visualize_service/Dockerfile_arm7l -t covid_visualize_service
+# RUN-USING: docker run -d --restart unless-stopped -p 127.0.0.1:3456:8080 -v volume-name:/app/data covid_visualize_service
+
+FROM python:3.8.5-slim-buster
+
+# Install OS dependencies
+RUN apt-get update
+RUN apt-get install -y cron git\
+    gcc gfortran python-dev libopenblas-dev liblapack-dev cython \
+    unzip wget
+RUN apt-get install -y libopenblas-base libatlas3-base
+
+# Compile numpy
+WORKDIR /app
+RUN wget https://github.com/numpy/numpy/archive/master.zip
+RUN unzip master.zip
+RUN rm master.zip
+WORKDIR /app/numpy-master
+RUN pip3 install cython
+RUN python3 setup.py build
+RUN python3 setup.py install --user
+
+# Revert workdir to root
+WORKDIR /
+
+RUN apt-get install -y g++
+
+# Install Python dependencies
+COPY ./Docker/visualize_service/requirements_arm7l.txt /app/requirements.txt
+RUN pip3 install --no-cache-dir -r /app/requirements.txt
+
+# Copy files
+COPY ./src/visualization/visualize.py /app/
+RUN chmod 755 /app/visualize.py
+
+EXPOSE 8080
+
+# Launch command
+ENTRYPOINT ["python", "/app/visualize.py",  "--data_path",  "/app/data/"]
