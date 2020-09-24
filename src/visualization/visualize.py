@@ -65,7 +65,7 @@ vis_input= dbc.FormGroup([
 
 #Create layout
 app.layout= dbc.Container(
-    fluid=False,
+    fluid=True,
     children=[
         # Navbar
         dbc.NavbarSimple(className="",dark=True,expand="sm",
