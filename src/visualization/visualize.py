@@ -34,6 +34,7 @@ fig= go.Figure()
 
 # Create Dash App
 app= dash.Dash(external_stylesheets=[dbc.themes.LUX])
+app.title= "COVID-19 Dashboard"
 
 # Country List Select
 ctry_input= dbc.FormGroup([
@@ -41,7 +42,7 @@ ctry_input= dbc.FormGroup([
     dcc.Dropdown(
         id="country_dropdown",
         options=[ {'label': each, 'value': each} for each in df_JH_data['country'].unique() ],
-        value=['Nigeria', 'Germany', 'Italy'],
+        value=['Nigeria', 'Germany'],
         multi=True
     )    
 ])
@@ -59,7 +60,8 @@ vis_input= dbc.FormGroup([
         ],
         value='confirmed',
         multi=False,
-        clearable=False
+        clearable=False,
+        searchable=False
     )    
 ])
 
@@ -73,7 +75,7 @@ app.layout= dbc.Container(
             children=[
                 dbc.NavItem(dbc.NavLink("Back to faaizz.com", href="https://faaizz.com"))
             ],
-            brand="COVID-19 Dashboard Prototype"
+            brand="COVID-19 Dashboard"
         ),
         # Header
         dhtml.Br(),
@@ -120,13 +122,13 @@ def update_fig(selected_countries, visual_name):
     if('DR' in visual_name):
         my_yaxis={
             'type': 'log',
-            'title': 'Approximated doubling rate over 3 days (the larger the number, the better)'
+            'title': 'Approximated doubling rate over 3 days (log-scale)'
         }
     
     else: 
         my_yaxis={
             'type': 'linear',
-            'title': 'Confirmed cases (source: Johns Hopkings, linear-scale)'
+            'title': 'Confirmed cases (linear-scale)'
         }
 
     #Traces
