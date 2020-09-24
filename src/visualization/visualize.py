@@ -65,11 +65,20 @@ vis_input= dbc.FormGroup([
 
 #Create layout
 app.layout= dbc.Container(
-    fluid=True,
+    fluid=False,
     children=[
+        # Navbar
+        dbc.NavbarSimple(className="",dark=True,fixed="top",expand="sm",
+            style={ "background": "linear-gradient(120deg,#11a048,#01727a)" },
+            children=[
+                dbc.NavItem(dbc.NavLink("Back to faaizz.com", href="https://faaizz.com"))
+            ],
+            brand="COVID-19 Dashboard Prototype"
+        ),
         # Header
         dhtml.Br(),dhtml.Br(),
-        dhtml.H1("COVID-19 Dashboard Prototype", className="text-center"),
+        dhtml.Br(),dhtml.Br(),
+        dhtml.Br(),dhtml.Br(),
         dhtml.P(children=[
             "A COVID-19 Dashboard Prototype developed using the Cross Industry \
             Standard Process for Data Mining. The data is sourced from ",
