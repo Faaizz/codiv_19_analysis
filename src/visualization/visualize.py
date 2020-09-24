@@ -76,9 +76,7 @@ app.layout= dbc.Container(
             brand="COVID-19 Dashboard Prototype"
         ),
         # Header
-        dhtml.Br(),dhtml.Br(),
-        dhtml.Br(),dhtml.Br(),
-        dhtml.Br(),dhtml.Br(),
+        dhtml.Br(),
         dhtml.P(children=[
             "A COVID-19 Dashboard Prototype developed using the Cross Industry \
             Standard Process for Data Mining. The data is sourced from ",
