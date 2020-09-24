@@ -83,7 +83,7 @@ app.layout= dbc.Container(
             "A COVID-19 Dashboard Prototype developed using the Cross Industry \
             Standard Process for Data Mining. The data is sourced from ",
             dhtml.A("Johns Hopkings University", href="https://github.com/CSSEGISandData/COVID-19"),
-            ", a Savitsky-Golay Filter is used for filtereing (in the filtered versions of the timelines), \
+            ", a Savitsky-Golay Filter is used for filtering (in the filtered versions of the timelines), \
             and the Doubling Times (the estimated number of days it will take for the current number of \
             confirmed cases to get doubled) are calculated using Linear Regression over a window of 3 days."
         ]),
