@@ -68,7 +68,7 @@ app.layout= dbc.Container(
     fluid=False,
     children=[
         # Navbar
-        dbc.NavbarSimple(className="",dark=True,fixed="top",expand="sm",
+        dbc.NavbarSimple(className="",dark=True,expand="sm",
             style={ "background": "linear-gradient(120deg,#11a048,#01727a)" },
             children=[
                 dbc.NavItem(dbc.NavLink("Back to faaizz.com", href="https://faaizz.com"))
