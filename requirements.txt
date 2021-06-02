@@ -85,7 +85,7 @@ testpath==0.4.4
 threadpoolctl @ file:///tmp/tmp9twdgx9k/threadpoolctl-2.1.0-py3-none-any.whl
 tornado==6.0.4
 traitlets==5.0.4
-urllib3==1.25.10
+urllib3==1.26.5
 wcwidth==0.2.5
 webencodings==0.5.1
 Werkzeug==1.0.1
